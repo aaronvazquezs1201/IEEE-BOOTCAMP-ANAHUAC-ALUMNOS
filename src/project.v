@@ -1,4 +1,33 @@
-module tt_um_bcd_to_7seg #(
+module user_project (
+    input  wire [7:0] ui_in,
+    output wire [7:0] uo_out,
+    input  wire [7:0] uio_in,
+    output wire [7:0] uio_out,
+    output wire [7:0] uio_oe,
+    input  wire       ena,
+    input  wire       clk,
+    input  wire       rst_n
+);
+    // Existing implementation must go here.
+endmodule
+```The module being instantiated in `tb.v` must provide exactly these ports:
+
+```verilog
+module user_project (
+    input  wire [7:0] ui_in,
+    output wire [7:0] uo_out,
+    input  wire [7:0] uio_in,
+    output wire [7:0] uio_out,
+    output wire [7:0] uio_oe,
+    input  wire       ena,
+    input  wire       clk,
+    input  wire       rst_n
+);
+
+    // Your project implementation goes here.
+
+endmodule
+    module tt_um_bcd_to_7seg #(
     parameter ACTIVE_LOW = 1'b1 // 1 = Ánodo Común (enciende con 0), 0 = Cátodo Común (enciende con 1)
 )(
     input  wire [3:0] bcd,      // Entrada BCD (0 a 9) o Hex (0 a F)
