@@ -58,8 +58,3 @@ module tt_um_bcd_to_7seg #(
     assign seg = ACTIVE_LOW ? ~seg_active_high : seg_active_high;
 
 endmodule
-
-    // Invierte los bits automáticamente si se configura para Ánodo Común
-    assign seg = ACTIVE_LOW ? ~seg_active_high : seg_active_high;
-
-endmodule
