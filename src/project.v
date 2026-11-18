@@ -1,4 +1,3 @@
-
 module tt_um_semisumador (
     input wire a,       // Entrada A
     input wire b,       // Entrada B
