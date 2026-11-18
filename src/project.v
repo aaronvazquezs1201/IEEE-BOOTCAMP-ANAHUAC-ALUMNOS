@@ -1,4 +1,4 @@
-module tt_um_user_project (
+module tt_um_bcd_to_7seg_decoder (
     input  wire [7:0] ui_in,
     output wire [7:0] uo_out,
     input  wire [7:0] uio_in,
@@ -21,9 +21,6 @@ module tt_um_user_project (
     assign uio_out = 8'b0;
     assign uio_oe  = 8'b0;
 
-endmodule
-
-module tt_um_bcd_to_7seg_decoder #(
     parameter ACTIVE_LOW = 1'b1
 ) (
     input  wire [3:0] bcd,
