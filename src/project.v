@@ -23,7 +23,7 @@ module tt_um_bcd_to_7seg_decoder (
 endmodule
 
 module bcd_to_7seg_decoder #(
-    parameter ACTIVE_LOW = 1'b0
+    parameter ACTIVE_LOW = 1'b1
 ) (
     input  wire [3:0] bcd,
     output wire [6:0] seg
