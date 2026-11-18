@@ -27,11 +27,14 @@ module user_project (
     // Your project implementation goes here.
 
 endmodule
+    
     module tt_um_bcd_to_7seg #(
     parameter ACTIVE_LOW = 1'b1 // 1 = Ánodo Común (enciende con 0), 0 = Cátodo Común (enciende con 1)
 )(
     input  wire [3:0] bcd,      // Entrada BCD (0 a 9) o Hex (0 a F)
-    output wire [6:0] seg       // Salida segmentos: {g, f, e, d, c, b, a} -> seg[0]=a ... seg[6]=g
+    output wire [6:0] seg
+    input wire clk,
+    input wire rst_n,// Salida segmentos: {g, f, e, d, c, b, a} -> seg[0]=a ... seg[6]=g
 );
 
     reg [6:0] seg_active_high;
