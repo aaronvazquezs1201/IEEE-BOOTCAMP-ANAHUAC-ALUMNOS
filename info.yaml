@@ -33,14 +33,14 @@ pinout:
   ui[7]: ""
 
   # Outputs
-  uo[0]: "segmento a"
-  uo[1]: "segmento b"
-  uo[2]: "segmento c"
-  uo[3]: "segmento d"
-  uo[4]: "segmento e"
-  uo[5]: "segmento f"
-  uo[6]: "segmento g"
-  uo[7]: "punto decimal (dp)"
+  uo[0]: "1'b0"
+  uo[1]: "seg [0]"
+  uo[2]: "seg [1]"
+  uo[3]: "seg [2]"
+  uo[4]: "seg [3]"
+  uo[5]: "seg [4]"
+  uo[6]: "seg [5]"
+  uo[7]: "seg [6]"
 
   # Bidirectional pins
   uio[0]: ""
