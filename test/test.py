@@ -25,12 +25,12 @@ async def test_project(dut):
 
     dut._log.info("Test project behavior")
 
-    # Probar dígito 0 (dp_in = 0)
+# Probar dígito 0 (Ánodo Común: seg g=1 apagado, a-f=0 encendidos)
     dut.ui_in.value = 0
     await ClockCycles(dut.clk, 1)
-    assert dut.uo_out.value == 0b00111111  # Segmentos a,b,c,d,e,f encendidos
+    assert dut.uo_out.value == 0b01000000
 
-    # Probar dígito 5 (dp_in = 0)
+    # Probar dígito 5 (Ánodo Común: seg b,e=1 apagados, a,c,d,f,g=0 encendidos)
     dut.ui_in.value = 5
     await ClockCycles(dut.clk, 1)
-    assert dut.uo_out.value == 0b01101101  # Segmentos a,c,d,f,g encendidos
+    assert dut.uo_out.value == 0b00010010
