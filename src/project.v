@@ -17,10 +17,12 @@ module tt_um_bcd_to_7seg_decoder (
         .seg(seg)
     );
 
-    assign uo_out  = {1'b0, seg};
+   assign uo_out  = {1'b0, seg};
     assign uio_out = 8'b0;
     assign uio_oe  = 8'b0;
+endmodule
 
+module bcd_to_7seg_decoder #(
     parameter ACTIVE_LOW = 1'b1
 ) (
     input  wire [3:0] bcd,
