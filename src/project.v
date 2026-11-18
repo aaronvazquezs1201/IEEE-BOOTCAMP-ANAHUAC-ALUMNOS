@@ -1,4 +1,4 @@
-module user_project (
+module tt_um_bcd_to_7seg (
     input  wire [7:0] ui_in,
     output wire [7:0] uo_out,
     input  wire [7:0] uio_in,
@@ -10,7 +10,7 @@ module user_project (
 );
     wire [6:0] seg;
 
-    tt_um_bcd_to_7seg #(
+    bcd_to_7seg_decoder #(
         .ACTIVE_LOW(1'b1)
     ) display_decoder (
         .bcd(ui_in[3:0]),
@@ -23,8 +23,7 @@ module user_project (
 
 endmodule
 
-
-module tt_um_bcd_to_7seg #(
+module bcd_to_7seg_decoder #(
     parameter ACTIVE_LOW = 1'b1
 ) (
     input  wire [3:0] bcd,
