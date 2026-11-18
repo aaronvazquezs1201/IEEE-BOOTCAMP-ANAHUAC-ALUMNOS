@@ -18,8 +18,8 @@ module tt_um_bcd_to_7seg (
     );
 
     assign uo_out  = {1'b0, seg};
-    assign uio_out = 8'b0;
-    assign uio_oe  = 8'b0;
+    assign uio_out = 0;
+    assign uio_oe  = 0;
 
 endmodule
 
