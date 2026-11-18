@@ -9,11 +9,11 @@ You can also include images in this folder and reference them in the markdown. E
 
 ## How it works
 
-Semisumador con suma y acarreo de un bit
+Decodificador BCD a 7 segmentos con lógica combinacional
 
 ## How to test
 
-Conectar a VCC (5V)
+Con las entradas en BCD, poner el número deseado
 
 ## External hardware
 
