@@ -9,11 +9,11 @@ You can also include images in this folder and reference them in the markdown. E
 
 ## How it works
 
-Explain how your project works
+Semisumador con suma y acarreo de un bit
 
 ## How to test
 
-Explain how to use your project
+Conectar a VCC (5V)
 
 ## External hardware
 
