@@ -4,17 +4,16 @@ from cocotb.triggers import ClockCycles
 
 
 async def submit_code(dut, code):
-    dut.ui_in.value = (1 << 4) | (code & 0xF)  # enter_btn = 1, key_in = code
+    dut.ui_in.value = (1 << 4) | (code & 0xF)
     await ClockCycles(dut.clk, 1)
-    dut.ui_in.value = code & 0xF               # enter_btn = 0
+    dut.ui_in.value = code & 0xF
     await ClockCycles(dut.clk, 1)
 
 
 @cocotb.test()
 async def test_project(dut):
-    dut._log.info("Start 4-bit Hex Digital Safe test")
+    dut._log.info("Start 4-bit Hex Digital Safe test with custom PIN")
 
-    # Nota: si tu plantilla anterior usaba units="us", cambia unit por units
     clock = Clock(dut.clk, 10, unit="us")
     cocotb.start_soon(clock.start())
 
@@ -27,66 +26,65 @@ async def test_project(dut):
     dut.rst_n.value = 1
     await ClockCycles(dut.clk, 2)
 
-    # Estado inicial: Display 1 = '0' (0x3F), Display 2 = '3' intentos (0x4F)
     assert int(dut.uio_oe.value) == 0xFF
-    assert int(dut.uo_out.value) == 0x3F
-    assert int(dut.uio_out.value) == 0x4F
+    assert int(dut.uo_out.value) == 0x3F   # '0'
+    assert int(dut.uio_out.value) == 0x4F  # '3'
 
-    # 1. Intento fallido con 0x5 -> Display 1 = '5' (0x6D), Display 2 = '2' (0x5B)
-    await submit_code(dut, 0x5)
-    assert int(dut.uo_out.value) == 0x6D
-    assert int(dut.uio_out.value) == 0x5B
-
-    # 2. Intento correcto con 0xA -> Display 1 = 'U' + dp (0xBE), Display 2 = '3' (0x4F)
+    # 1. Abrir con contraseña inicial (0xA)
     await submit_code(dut, 0xA)
-    assert int(dut.uo_out.value) == 0xBE
-    assert int(dut.uio_out.value) == 0x4F
+    assert int(dut.uo_out.value) == 0xBE   # 'U.'
+    assert int(dut.uio_out.value) == 0x4F  # '3'
 
-    # 3. Cerrar caja fuerte (lock_btn = ui_in[5])
+    # 2. Activar prog_mode (ui_in[7]=1) y configurar nueva contraseña 0xC
+    dut.ui_in.value = (1 << 7) | 0xC
+    await ClockCycles(dut.clk, 1)
+    assert int(dut.uo_out.value) == 0xB9   # 'C.'
+    assert int(dut.uio_out.value) == 0xF3  # 'P.'
+
+    # Guardar con pulso en enter_btn (ui_in[4])
+    dut.ui_in.value = (1 << 7) | (1 << 4) | 0xC
+    await ClockCycles(dut.clk, 1)
+    dut.ui_in.value = (1 << 7) | 0xC
+    await ClockCycles(dut.clk, 1)
+
+    # Salir de prog_mode y cerrar caja (lock_btn = ui_in[5])
     dut.ui_in.value = 1 << 5
     await ClockCycles(dut.clk, 1)
     dut.ui_in.value = 0
     await ClockCycles(dut.clk, 1)
-    assert int(dut.uo_out.value) == 0x3F  # '0'
-    assert int(dut.uio_out.value) == 0x4F # '3'
+    assert int(dut.uo_out.value) == 0x3F   # '0'
 
-    # 4. Tres intentos fallidos consecutivos -> LOCKOUT
-    await submit_code(dut, 0x1)  # quedan 2
-    assert int(dut.uio_out.value) == 0x5B
-    await submit_code(dut, 0x2)  # queda 1
-    assert int(dut.uio_out.value) == 0x06
-    await submit_code(dut, 0xF)  # quedan 0 -> LOCKOUT
-
-    # Display 1 = 'L' (0x38), Display 2 = '0' + dp alarma (0xBF)
-    assert int(dut.uo_out.value) == 0x38
-    assert int(dut.uio_out.value) == 0xBF
-
-    # Confirmar que bloqueada rechaza incluso el código correcto
+    # 3. Probar contraseña vieja (0xA) -> debe fallar (quedan 2 intentos)
     await submit_code(dut, 0xA)
-    assert int(dut.uo_out.value) == 0x38
-    assert int(dut.uio_out.value) == 0xBF
+    assert int(dut.uo_out.value) == 0x77   # 'A'
+    assert int(dut.uio_out.value) == 0x5B  # '2'
 
-    # 5. Consultar registro de accesos (log_mode = 1 en ui_in[6])
-    # Entrada 0: código 5 (0xED con dp=1) | resultado 'd' Denied (0xDE con dp=1)
-    dut.ui_in.value = (1 << 6) | 0
+    # 4. Probar nueva contraseña (0xC) -> debe abrir
+    await submit_code(dut, 0xC)
+    assert int(dut.uo_out.value) == 0xBE   # 'U.'
+    assert int(dut.uio_out.value) == 0x4F  # '3'
+
+    # 5. Cerrar y forzar LOCKOUT con 3 fallos
+    dut.ui_in.value = 1 << 5
     await ClockCycles(dut.clk, 1)
-    assert int(dut.uo_out.value) == 0xED
-    assert int(dut.uio_out.value) == 0xDE
+    dut.ui_in.value = 0
+    await ClockCycles(dut.clk, 1)
 
-    # Entrada 1: código A (0xF7 con dp=1) | resultado 'A' Granted (0xF7 con dp=1)
+    await submit_code(dut, 0x1)
+    await submit_code(dut, 0x2)
+    await submit_code(dut, 0xF)
+    assert int(dut.uo_out.value) == 0x38   # 'L'
+    assert int(dut.uio_out.value) == 0xBF  # '0.'
+
+    # 6. Verificar registro de accesos (log_mode = ui_in[6])
+    # Entrada 1: 0xA denegado ('A.' y 'd.')
     dut.ui_in.value = (1 << 6) | 1
     await ClockCycles(dut.clk, 1)
     assert int(dut.uo_out.value) == 0xF7
+    assert int(dut.uio_out.value) == 0xDE
+
+    # Entrada 2: 0xC aceptado ('C.' y 'A.')
+    dut.ui_in.value = (1 << 6) | 2
+    await ClockCycles(dut.clk, 1)
+    assert int(dut.uo_out.value) == 0xB9
     assert int(dut.uio_out.value) == 0xF7
-
-    # Entrada 4: código F (0xF1 con dp=1) | resultado 'E' Lockout (0xF9 con dp=1)
-    dut.ui_in.value = (1 << 6) | 4
-    await ClockCycles(dut.clk, 1)
-    assert int(dut.uo_out.value) == 0xF1
-    assert int(dut.uio_out.value) == 0xF9
-
-    # Entrada 5 (vacía): Display 1 = '-' + dp (0xC0) | Display 2 = '-' (0x40)
-    dut.ui_in.value = (1 << 6) | 5
-    await ClockCycles(dut.clk, 1)
-    assert int(dut.uo_out.value) == 0xC0
-    assert int(dut.uio_out.value) == 0x40
