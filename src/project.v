@@ -182,4 +182,3 @@ module tt_um_digital_safe (
     wire _unused = &{ena, ui_in[7], uio_in, 1'b0};
 
 endmodule
-endmodule
