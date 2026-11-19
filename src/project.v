@@ -11,13 +11,13 @@ module tt_um_bcd_to_7seg_decoder (
     wire [6:0] seg;
 
     bcd_to_7seg_decoder #(
-        .ACTIVE_LOW(1'b1)
+        .ACTIVE_LOW(1'b0)
     ) display_decoder (
         .bcd(ui_in[3:0]),
         .seg(seg)
     );
 
-   assign uo_out  = {1'b0, seg};
+    assign uo_out  = {1'b0, seg [0],seg[1],seg[2],seg[3],seg[4],seg[5],seg[6]};
     assign uio_out = 8'b0;
     assign uio_oe  = 8'b0;
 endmodule
