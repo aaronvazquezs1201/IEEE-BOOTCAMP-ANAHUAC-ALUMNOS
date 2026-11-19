@@ -12,7 +12,7 @@ module tt_um_digital_safe (
 );
 
     // Contraseña hexadecimal de 4 bits (cámbiala aquí si lo deseas)
-    localparam [3:0] PIN_DEFAULT = 4'hA;
+    localparam [3:0] PIN_DEFAULT = 4'h7;
 
     // Estados de la FSM
     localparam [1:0] S_LOCKED   = 2'd0;
