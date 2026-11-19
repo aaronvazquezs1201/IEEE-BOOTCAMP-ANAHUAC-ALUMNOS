@@ -1,7 +1,7 @@
 # Tiny Tapeout project information
 project:
   title:        "caja_fuerte_digital_con_registro_de_acceso"      # Project title
-  author:       ""      # Your name
+  author:       "Aarón Vazquez, "      # Your name
   discord:      ""      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
   description:  "Cerradura electrónica de seguridad con clave programable de 4 dígitos hexadecimales, indicador de estado en 7 segmentos y bloqueo con alarma tras tres intentos fallidos."      # One line description of what your project does
   language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
@@ -11,7 +11,7 @@ project:
   tiles: "1x1"          # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2, 3x4 or 4x4
 
   # Your top module name must start with "tt_um_". Make it unique by including your github username:
-  top_module:  "tt_um_"
+  top_module:  "tt_um_digital_safe"
 
   # List your project's source files here.
   # Source files must be in ./src and you must list each source file separately, one per line.
@@ -23,34 +23,34 @@ project:
 # This section is for the datasheet/website. Use descriptive names (e.g., RX, TX, MOSI, SCL, SEG_A, etc.).
 pinout:
   # Inputs
-  ui[0]: ""
-  ui[1]: ""
-  ui[2]: ""
-  ui[3]: ""
-  ui[4]: ""
-  ui[5]: ""
-  ui[6]: ""
+  ui[0]: "key_in[0] / log_addr[0]"
+  ui[1]: "key_in[1] / log_addr[1]"
+  ui[2]: "key_in[2] / log_addr[2]"
+  ui[3]: "key_in[3]"
+  ui[4]: "enter_btn"
+  ui[5]: "lock_btn"
+  ui[6]: "log_mode"
   ui[7]: ""
 
-  # Outputs
-  uo[0]: ""
-  uo[1]: ""
-  uo[2]: ""
-  uo[3]: ""
-  uo[4]: ""
-  uo[5]: ""
-  uo[6]: ""
-  uo[7]: ""
+  # Outputs (1-7 segments)
+  uo[0]: "disp1_a"
+  uo[1]: "disp1_b"
+  uo[2]: "disp1_c"
+  uo[3]: "disp1_d"
+  uo[4]: "disp1_e"
+  uo[5]: "disp1_f"
+  uo[6]: "disp1_g"
+  uo[7]: "disp1_dp"
 
-  # Bidirectional pins
-  uio[0]: ""
-  uio[1]: ""
-  uio[2]: ""
-  uio[3]: ""
-  uio[4]: ""
-  uio[5]: ""
-  uio[6]: ""
-  uio[7]: ""
+  # Bidirectional pins (Display segments 2-7)
+  uio[0]: "disp2_a"
+  uio[1]: "disp2_b"
+  uio[2]: "disp2_c"
+  uio[3]: "disp2_d"
+  uio[4]: "disp2_e"
+  uio[5]: "disp2_f"
+  uio[6]: "disp2_g"
+  uio[7]: "disp2_dp"
 
 # Do not change!
 yaml_version: 6
