@@ -1,4 +1,20 @@
-module tt_um_ multiplicador_4bits (
+`default_nettype none
+
+// ==================================================
+// PROJECT: 4-BIT BINARY MULTIPLIER
+// TOP MODULE: tt_um_multiplicador_4bits
+// PLATFORM: TINY TAPEOUT
+//
+// INPUT:  8-bit bus (two 4-bit operands)
+// OUTPUT: 8-bit product
+// STORAGE: 8 D-type flip-flops
+//
+// OPERATION:
+// The multiplication is combinational.
+// The result is stored on each rising clock edge.
+// ==================================================
+
+module tt_um_multiplicador_4bits (
     input  wire [7:0] ui_in,
     output wire [7:0] uo_out,
     input  wire [7:0] uio_in,
@@ -8,51 +24,87 @@ module tt_um_ multiplicador_4bits (
     input  wire       clk,
     input  wire       rst_n
 );
-    wire [6:0] seg;
 
-    bcd_to_7seg_decoder #(
-        .ACTIVE_LOW(1'b0)
-    ) display_decoder (
-        .bcd(ui_in[3:0]),
-        .seg(seg)
-    );
+    // ==============================================
+    // 1. INPUT OPERANDS
+    // ==============================================
 
-    assign uo_out  = {1'b0, seg};
-    assign uio_out = 8'b0;
-    assign uio_oe  = 8'b0;
-endmodule
+    wire [3:0] A;
+    wire [3:0] B;
 
-module bcd_to_7seg_decoder #(
-    parameter ACTIVE_LOW = 1'b1
-) (
-    input  wire [3:0] bcd,
-    output wire [6:0] seg
-);
-    reg [6:0] seg_active_high;
+    assign A = ui_in[7:4];
+    assign B = ui_in[3:0];
 
-    // Bit order: seg[6]=g, seg[5]=f, ..., seg[0]=a.
-    always @(*) begin
-        case (bcd)
-            4'h0: seg_active_high = 7'b011_1111;
-            4'h1: seg_active_high = 7'b000_0110;
-            4'h2: seg_active_high = 7'b101_1011;
-            4'h3: seg_active_high = 7'b100_1111;
-            4'h4: seg_active_high = 7'b110_0110;
-            4'h5: seg_active_high = 7'b110_1101;
-            4'h6: seg_active_high = 7'b111_1101;
-            4'h7: seg_active_high = 7'b000_0111;
-            4'h8: seg_active_high = 7'b111_1111;
-            4'h9: seg_active_high = 7'b110_1111;
-            4'hA: seg_active_high = 7'b111_0111;
-            4'hB: seg_active_high = 7'b111_1100;
-            4'hC: seg_active_high = 7'b011_1001;
-            4'hD: seg_active_high = 7'b101_1110;
-            4'hE: seg_active_high = 7'b111_1001;
-            4'hF: seg_active_high = 7'b111_0001;
-            default: seg_active_high = 7'b000_0000;
-        endcase
+
+    // ==============================================
+    // 2. PARTIAL PRODUCT GENERATION
+    // ==============================================
+
+    wire [7:0] pp0;
+    wire [7:0] pp1;
+    wire [7:0] pp2;
+    wire [7:0] pp3;
+
+    assign pp0 = {4'b0000, (A & {4{B[0]}})};
+
+    assign pp1 = {3'b000, (A & {4{B[1]}}), 1'b0};
+
+    assign pp2 = {2'b00, (A & {4{B[2]}}), 2'b00};
+
+    assign pp3 = {1'b0, (A & {4{B[3]}}), 3'b000};
+
+
+    // ==============================================
+    // 3. PARTIAL PRODUCT ADDITION
+    // ==============================================
+
+    wire [7:0] product_comb;
+
+    assign product_comb = pp0 + pp1 + pp2 + pp3;
+
+
+    // ==============================================
+    // 4. D-TYPE FLIP-FLOP OUTPUT REGISTER
+    // ==============================================
+
+    reg [7:0] product_reg;
+
+    always @(posedge clk or negedge rst_n) begin
+
+        if (!rst_n) begin
+            product_reg <= 8'b00000000;
+        end
+
+        else begin
+            product_reg <= product_comb;
+        end
+
     end
 
-    assign seg = ACTIVE_LOW ? ~seg_active_high : seg_active_high;
+
+    // ==============================================
+    // 5. OUTPUT ASSIGNMENT
+    // ==============================================
+
+    assign uo_out = product_reg;
+
+
+    // ==============================================
+    // 6. UNUSED BIDIRECTIONAL PINS
+    // ==============================================
+
+    assign uio_out = 8'b00000000;
+    assign uio_oe  = 8'b00000000;
+
+
+    // ==============================================
+    // 7. UNUSED INPUT SIGNALS
+    // ==============================================
+
+    wire unused;
+
+    assign unused = &{ena, uio_in};
 
 endmodule
+
+`default_nettype wire
