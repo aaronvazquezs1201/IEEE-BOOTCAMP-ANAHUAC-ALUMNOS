@@ -1,9 +1,9 @@
 # Tiny Tapeout project information
 project:
-  title:        "ALU de 8 bits"      # Project title
+  title:        "Multiplicador de 4 bits"      # Project title
   author:       ""      # Your name
   discord:      ""      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
-  description:  "Unidad aritmético-lógica síncrona de 8 bits que realiza operaciones lógicas básicas junto con suma, resta, multiplicación y división secuencial mediante carga multiplexada por bus."      # One line description of what your project does
+  description:  "Unidad aritmética que obtiene el producto entre dos entradas de 4 bits, usando un registro de desplazamiento, con una salida de 8 bits"      # One line description of what your project does
   language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
   clock_hz:     0       # Clock frequency in Hz (or 0 if not applicable)
 
