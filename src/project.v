@@ -1,5 +1,4 @@
-module tt_um_
-endmodule
+
 `timescale 1ns/1ps
 
 // ================================================
@@ -14,7 +13,7 @@ endmodule
 // MODULO 1: MULTIPLICADOR COMBINACIONAL
 // ================================================
 
-module multiplicador_4bits (
+module tt_um_ multiplicador_4bits (
     input wire [7:0] datos_in,
     output wire [7:0] producto
 );
