@@ -17,7 +17,7 @@ module tt_um_bcd_to_7seg_decoder (
         .seg(seg)
     );
 
-    assign uo_out  = {1'b0, seg [0],seg[1],seg[2],seg[3],seg[4],seg[5],seg[6]};
+    assign uo_out  = {1'b0, seg};
     assign uio_out = 8'b0;
     assign uio_oe  = 8'b0;
 endmodule
