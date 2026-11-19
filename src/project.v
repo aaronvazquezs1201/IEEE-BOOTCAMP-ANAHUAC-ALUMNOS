@@ -1,4 +1,4 @@
-module tt_um_bcd_to_7seg_decoder (
+module tt_um_ multiplicador_4bits (
     input  wire [7:0] ui_in,
     output wire [7:0] uo_out,
     input  wire [7:0] uio_in,
