@@ -30,7 +30,7 @@ pinout:
   ui[4]: "enter_btn"
   ui[5]: "lock_btn"
   ui[6]: "log_mode"
-  ui[7]: ""
+  ui[7]: "prog_mode"
 
   # Outputs (1-7 segments)
   uo[0]: "disp1_a"
